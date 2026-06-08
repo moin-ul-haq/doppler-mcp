@@ -3,6 +3,7 @@ import requests
 import logging
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp.server import TransportSecuritySettings
 
 # Load environment variables from .env file for local development
 load_dotenv()
@@ -11,8 +12,9 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("doppler-mcp")
 
-# Initialize FastMCP
-mcp = FastMCP("Doppler Secrets MCP")
+# Initialize FastMCP (disabling DNS rebinding protection to allow requests on Render)
+security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+mcp = FastMCP("Doppler Secrets MCP", transport_security=security)
 
 # ─── CONFIG ───────────────────────────────────────────────
 DOPPLER_TOKEN   = os.environ.get('DOPPLER_TOKEN')
